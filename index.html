@@ -1,0 +1,547 @@
+<html>
+<head>
+<title>Facultad 3D</title>
+</head>
+<body>
+
+<script src="JS/three.min.js"></script>
+<script src="JS/TrackballControls.js"></script>
+<script src="JS/THREEx.KeyboardState.js"></script>
+<script src="JS/OrbitControls.js"></script>
+<script src="JS/webgl-utils.js"></script>
+<script src="JS/glMatrix-0.9.5.min.js"></script>
+<script src="JS/uanl.fcfm.mi.js"></script>
+<script type="text/javascript" src="JS/ColladaLoader.js"></script>
+<script src="JS/sweet-alert.js"></script>
+<link rel="stylesheet" href="JS/sweet-alert.css">
+<script>
+var teclado = new THREEx.KeyboardState();
+var controls;
+var rotSpeed=0.005;
+
+iniciar();
+animar();	
+
+function iniciar()
+{
+	escenario = new THREE.Scene();
+	var SCREEN_WIDTH = window.innerWidth; 
+	var SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45;
+	var ASPECT = 1980 / 1080;
+	var NEAR = 0.1;
+	var FAR = 1000;
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	escenario.add(camera);
+	camera.position.set(10,5,15);
+	camera.rotation.y=90;
+	renderer = new THREE.WebGLRenderer( {antialias:true} );
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	document.body.appendChild( renderer.domElement );
+	controls = new THREE.TrackballControls( camera );
+
+
+	var Pilares = new THREE.JSONLoader();
+	Pilares.load("OBJ/Pilarin.js", AgregarPilares);
+
+	var Pozo = new THREE.JSONLoader();
+	Pozo.load("OBJ/pozo.js", AgregarPozo);
+
+	var Pozo1 = new THREE.JSONLoader();
+	Pozo1.load("OBJ/pozo1.js", AgregarPozo1);
+
+	var Pozo2 = new THREE.JSONLoader();
+	Pozo2.load("OBJ/pozo2.js", AgregarPozo2);
+
+	var Escalon = new THREE.JSONLoader();
+	Escalon.load("OBJ/escalon.js", AgregarEscalon);
+
+	var Esc = new THREE.JSONLoader();
+	Esc.load("OBJ/esc.js", AgregarEsc);
+
+	var pared = new THREE.JSONLoader();
+	pared.load("OBJ/pared.js", AgregarPared);
+
+	var tubo = new THREE.JSONLoader();
+	tubo.load("OBJ/tubo.js", AgregarTubo);
+
+	var barandal = new THREE.JSONLoader();
+	barandal.load("OBJ/barandal.js", AgregarBarandal);
+	
+	var Ventana = new THREE.JSONLoader();
+	Ventana.load("OBJ/ventana.js", AgregarVentana);
+
+	var Puerta = new THREE.JSONLoader();
+	Puerta.load("OBJ/puerta.js", AgregarPuerta);
+
+	var GranPuerta = new THREE.JSONLoader();
+	GranPuerta.load("OBJ/granpuerta.js", AgregarGranPuerta);
+
+	var Contorno = new THREE.JSONLoader();
+	Contorno.load("OBJ/contorno.js", AgregarContorno);
+
+	var Franga = new THREE.JSONLoader();
+	Franga.load("OBJ/franga.js", AgregarFranga);
+
+	var Alfombra = new THREE.JSONLoader();
+	Alfombra.load("OBJ/alfombra.js", AgregarAlfombra);
+
+	var Silla = new THREE.JSONLoader();
+	Silla.load("OBJ/silla.js", AgregarSilla);
+
+	var Muro = new THREE.JSONLoader();
+	Muro.load("OBJ/muro.js", AgregarMuro);
+
+	var Muro2 = new THREE.JSONLoader();
+	Muro2.load("OBJ/muro2.js", AgregarMuro2);
+
+	var Piso23 = new THREE.JSONLoader();
+	Piso23.load("OBJ/piso23.js", AgregarPiso23);
+
+	var Pared23 = new THREE.JSONLoader();
+	Pared23.load("OBJ/pared23.js", AgregarPared23);
+
+	var Mas23 = new THREE.JSONLoader();
+	Mas23.load("OBJ/mas23.js", AgregarMas23);
+
+	var Techo23 = new THREE.JSONLoader();
+	Techo23.load("OBJ/techo23.js", AgregarTecho23);
+
+	var Pila = new THREE.JSONLoader();
+	Pila.load("OBJ/Pila.js", AgregarPila);
+
+	var Escaleras = new THREE.JSONLoader();
+	Escaleras.load("OBJ/Escaleras.js", AgregarEscaleras);
+	Luz();
+}
+function Luz()
+{
+	var luz = new THREE.PointLight(0xffffff);
+	luz.position.set(-100,200,100);
+	escenario.add(luz);
+	var Luzambiente = new THREE.AmbientLight(0x000000);
+	escenario.add(Luzambiente);
+	var sunlight = new THREE.DirectionalLight();
+    sunlight.position.set(500, 500, -500);
+    sunlight.intensity = 1.3;
+    sunlight.castShadow = true;
+    sunlight.shadowCameraVisible = true;
+    sunlight.shadowCameraNear = 250;
+    sunlight.shadowCameraFar = 20000;
+    sunlight.shadowCameraLeft = -200;
+    sunlight.shadowCameraRight = 200;
+    sunlight.shadowCameraTop = 200;
+    sunlight.shadowCameraBottom = -200;
+	escenario.add(sunlight);
+}
+
+function AgregarEscaleras( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/escalera.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+function AgregarPiso23( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/piso23.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+function AgregarPared23( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/pared23.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarMas23( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/mas23.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarTecho23( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/piso23.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarPila( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/pila.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+
+function AgregarPozo( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/logo.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarPozo1( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/pozo1.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarPozo2( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/pozo.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+
+function AgregarEscalon( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/escalon.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarEsc( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/esc.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarPared( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/pared.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarTubo( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/tubo.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarBarandal( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/pozo1.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarVentana( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/ventanas.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarPuerta( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/pue2.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarGranPuerta( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/puertas.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarContorno( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/contorno.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarFranga( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/franga.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarAlfombra( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/alfombra.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarSilla( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/silla.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarMuro( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/muro.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+function AgregarMuro2( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/escalera.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+
+
+function AgregarPilares( geometry, materials ) {
+	imagen=new THREE.ImageUtils.loadTexture('Texturas/yeso1.jpg');
+	material = new THREE.MeshBasicMaterial( {map:imagen} );	
+	modelo3d_ = new THREE.Mesh( geometry,material );	
+	escenario.add(modelo3d_);
+	modelo3d_.add(camera);	
+	modelo3d_.scale.set(10,10,10);	
+	modelo3d_.position.set(10,13,10);
+	modelo3d_.rotation.y=Math.PI;
+}
+function mensajeCafe()
+{
+	swal("Cafeteria", "Esta es la Cafeteria de la Facultad Ciencias Fisico Matematicas, aqui se sirven siempre deliciosas comidas.");
+}
+function mensajeAudi()
+{
+	swal("Auditorio", "Este es el primer Auditorio de la Facultad Ciencias Fisico Matematicas, aqui se realizan todas conferencias.");
+}
+
+function checkRotation(){
+
+    var x = camera.position.x,
+        y = camera.position.y,
+        z = camera.position.z;
+
+    if (teclado.pressed("left")){ 
+        camera.position.x = x * Math.cos(rotSpeed) + z * Math.sin(rotSpeed);
+        camera.position.z = z * Math.cos(rotSpeed) - x * Math.sin(rotSpeed);
+    } else if (teclado.pressed("right")){
+        camera.position.x = x * Math.cos(rotSpeed) - z * Math.sin(rotSpeed);
+        camera.position.z = z * Math.cos(rotSpeed) + x * Math.sin(rotSpeed);
+    }
+    
+    camera.lookAt(escenario.position);
+    
+} 
+
+function colisiones()
+{
+					tiempo=0.005;
+					distancia=50;
+					recorrido=Math.abs(distancia*tiempo);
+					
+					obj_mov=camera;
+					
+					if(teclado.pressed("w")){
+						obj_mov.position.z-=recorrido;
+						
+					}
+					if(teclado.pressed("s")){
+						obj_mov.position.z+=recorrido;
+					}
+					if(teclado.pressed("a")){
+						obj_mov.position.x-=recorrido;
+						
+					}
+					if(teclado.pressed("d")){
+						obj_mov.position.x+=recorrido;
+					}
+					
+					
+
+if(camera.position.x==-24 && camera.position.y==2)
+{
+	camera.position.x = -23;
+	camera.position.y= 2;
+}
+if(camera.position.x==27 && camera.position.y==5 && camera.position.z > -2 && camera.position.z < 4)
+{
+	
+	camera.position.y= 7;
+}
+if(camera.position.x==26 && camera.position.y==7 && camera.position.z >-2 && camera.position.z < 4)
+{
+	
+	camera.position.y= 5;
+}
+if(camera.position.z==-36 && camera.position.y==5)
+{
+	camera.position.z = -35;
+	camera.position.y= 5;
+}
+if(camera.position.z==38 && camera.position.y==5)
+{
+	camera.position.z = 37;
+	camera.position.y= 5;
+}
+if(camera.position.x>23 && camera.position.z>7 && camera.position.z<33 && camera.position.y==5)
+{
+	camera.position.x=22;
+}
+if(camera.position.x>23 && camera.position.z<-4 && camera.position.z<-32 && camera.position.y==5)
+{
+	camera.position.x=22;
+}
+
+
+
+
+if(camera.position.x<=42 && camera.position.x>=38&& camera.position.y ==7)
+{
+	camera.position.x = 40;
+}
+
+if(camera.position.x==40 && camera.position.y==7 && camera.position.z >-2 && camera.position.z < 2)
+{
+	camera.position.x=37;
+}
+
+if(camera.position.x==-49)
+{
+	camera.position.x = -48;
+}
+if(camera.position.z==90)
+					{
+						camera.position.z = 89;
+					}
+					if(camera.position.z==-55)
+					{
+						camera.position.z = -54;
+					}
+					if(camera.position.x==-48.25 && camera.position.z==12 && camera.position.y == 7 )
+					{
+						mensajeCafe();
+				
+
+					}
+					if(camera.position.x==40 && camera.position.z==-28 && camera.position.y == 7 )
+					{
+						mensajeAudi();
+				
+
+					}
+					
+					tiempo_rotacion=0.1;
+					distancia=100;
+					recorrido_rotacion=distancia*tiempo_rotacion;
+
+					
+					 camera.lookAt(escenario.position);
+				controls.target.set(camera.position.x,camera.position.y,camera.position.z);
+
+}
+
+function animar() {
+	
+
+	colisiones();
+	checkRotation();
+	controls.update();
+	requestAnimationFrame( animar );
+	renderer.render(escenario,camera);	
+}
+</script>
+</body>
+</html>
